@@ -15,7 +15,7 @@ from subprocess import call
 
 def display_notes(notes):
     for note in notes:
-        wf.add_item(note.title, arg = note.uuid, valid = True, icon = "note.png")
+        wf.add_item(note.title, arg = note.uuid, valid = True, icon = "icons/note.png")
 
 
 def search_notes(phrase):
@@ -53,7 +53,7 @@ def main(wf):
     if is_running('update'):
         wf.add_item('Constructing database...', icon=ICON_INFO)
 
-    icon_set = {"Inbox" : "inbox.png", "Recents": "recent.png", "Trash": "trash.png"}
+    icon_set = {"Inbox" : "icons/inbox.png", "Recents": "icons/recent.png", "Trash": "icons/trash.png"}
 
     tagset = list(Tags.select(Tags.tag, fn.COUNT(Tags.id).alias("count"))
                         .group_by(Tags.tag)
@@ -86,7 +86,7 @@ def main(wf):
             tag_filter.append(ttag)
         tag_filter = wf.filter(args, tag_filter)
         for ttag in tag_filter:
-            wf.add_item(ttag, str(tag["count"]) + " item(s)",  autocomplete = ttag, icon = "tag.png")
+            wf.add_item(ttag, str(tag["count"]) + " item(s)",  autocomplete = ttag, icon = "icons/tag.png")
 
     # Searching by Notebook
     elif args in notebooks_list:
@@ -103,7 +103,7 @@ def main(wf):
             if n in icon_set:
                 icon = icon_set[n]
             else:
-                icon = "notebook.png"
+                icon = "icons/notebook.png"
             if n == "Recents":
                 wf.add_item("Recents", autocomplete = "Recents", icon = icon)
             else:
@@ -121,7 +121,7 @@ def main(wf):
             else:
                 for result in results:
                     r = Note.get(uuid = result.uuid)
-                    wf.add_item(r.title, str(result.search_score) + "-" + unicode(result.content),  arg = r.uuid, valid = True, icon = "note.png")
+                    wf.add_item(r.title, str(result.search_score) + "-" + unicode(result.content),  arg = r.uuid, valid = True, icon = "icons/note.png")
 
 
     # Send output to Alfred. You can only call this once.
