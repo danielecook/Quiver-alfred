@@ -11,7 +11,7 @@ def main(wf):
     out, err = Popen(["mdfind","-name",".qvlibrary"], stdout=PIPE, stderr=PIPE).communicate()
     out = out.split("\n")
     for i in out:
-        wf.add_item(os.path.split(i)[1],i, arg=i, valid=True)
+        wf.add_item(os.path.split(i)[1],i, arg=i, valid=True, icon="icons/lib.icns")
 
     wf.send_feedback()
 
