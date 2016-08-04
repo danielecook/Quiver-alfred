@@ -5,7 +5,10 @@ import sys
 
 from workflow import Workflow, ICON_ERROR, ICON_INFO, ICON_SYNC
 from workflow.background import run_in_background, is_running
-from quiver_to_db import Note, NoteIndex, Tags, db
+try:
+    from quiver_to_db import Note, NoteIndex, Tags, db
+except:
+    pass
 from peewee import fn
 import os
 from subprocess import call
@@ -31,6 +34,14 @@ def main(wf):
     args = wf.args[0]
     # Do stuff here ...
     # Add an item to Alfred feedback
+    libpath = wf.stored_data('library_location')
+
+    if not libpath:
+        wf.add_item('Set Quiver Library with qset', icon=ICON_INFO)
+        wf.send_feedback()
+        return
+    
+    db.connect()
 
     if not os.path.exists("quiver.db"):
         wf.add_item('Constructing database...', icon=ICON_INFO)
@@ -133,7 +144,6 @@ def main(wf):
 if __name__ == '__main__':
     # Create a global `Workflow` object
     wf = Workflow()
-    db.connect()
     # Call your entry function via `Workflow.run()` to enable its helper
     # functions, like exception catching, ARGV normalization, magic
     # arguments etc.
