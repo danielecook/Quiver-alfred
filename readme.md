@@ -2,7 +2,7 @@
 
 Search Quiver from Alfred!
 
-## [Download](https://github.com/danielecook/Quiver-alfred/releases/download/0.1/Quiver.Search.alfredworkflow)
+### [Download](https://github.com/danielecook/Quiver-alfred/releases/download/0.1/Quiver.Search.alfredworkflow)
 
 ## Usage
 
