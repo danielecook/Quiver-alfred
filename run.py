@@ -137,13 +137,12 @@ def main(wf):
                            wf.workflowfile('quiver_to_db.py')])
 
 
-
-
-
-
 if __name__ == '__main__':
     # Create a global `Workflow` object
-    wf = Workflow()
+    wf = Workflow(update_settings={'github_slug': 'danielecook/Quiver-alfred', 'version': '0.3'})
+    if wf.update_available:
+        # Download new version and tell Alfred to install it
+        wf.start_update()
     # Call your entry function via `Workflow.run()` to enable its helper
     # functions, like exception catching, ARGV normalization, magic
     # arguments etc.
