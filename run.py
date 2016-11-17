@@ -107,6 +107,8 @@ def main(wf):
             if n == "Recents":
                 wf.add_item("Recents", autocomplete = "Recents", icon = icon)
             else:
+                # Default retrieval `notebook = n' with `count = 0' to prevent keyerror on empty Index / Trash
+                notebook = notebooks_q.get(n, {"notebook": n, "count": 0})
                 wf.add_item(notebooks_q[n]["notebook"], str(notebooks_q[n]["count"]) + " item(s)", autocomplete = n, icon = icon)
 
         if len(args) > 0:
