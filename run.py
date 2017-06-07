@@ -13,9 +13,10 @@ from peewee import fn
 import os
 from subprocess import call
 
+
 def display_notes(notes):
     for note in notes:
-        wf.add_item(note.title, arg = note.uuid, valid = True, icon = "icons/note.png")
+        wf.add_item(note.title, arg=note.uuid, valid=True, icon="icons/note.png")
 
 
 def search_notes(phrase):
@@ -40,7 +41,6 @@ def main(wf):
         wf.add_item('Set Quiver Library with qset', icon=ICON_INFO)
         wf.send_feedback()
         return
-    
     db.connect()
 
     if not os.path.exists("quiver.db"):
@@ -86,17 +86,17 @@ def main(wf):
             tag_filter.append(ttag)
         tag_filter = wf.filter(args, tag_filter)
         for ttag in tag_filter:
-            wf.add_item(ttag, str(tag["count"]) + " item(s)",  autocomplete = ttag, icon = "icons/tag.png")
+            wf.add_item(ttag, str(tag["count"]) + " item(s)",  autocomplete=ttag, icon="icons/tag.png")
 
     # Searching by Notebook
     elif args in notebooks_list:
         if args == "Recents":
-             # Show Recents
+            # Show Recents
             display_notes(Note.select().order_by(-Note.last_modified).distinct().limit(10).execute())
         else:
             display_notes(Note.select().filter(Note.notebook == args).execute())
     else:
-        notebooks_q = {x["notebook"]:x for x in notebooks}
+        notebooks_q = {x["notebook"]: x for x in notebooks}
         if len(args) > 0:
             notebooks_list = wf.filter(args, notebooks_list)
         for n in notebooks_list:
@@ -105,9 +105,10 @@ def main(wf):
             else:
                 icon = "icons/notebook.png"
             if n == "Recents":
-                wf.add_item("Recents", autocomplete = "Recents", icon = icon)
+                wf.add_item("Recents", autocomplete="Recents", icon=icon)
             else:
-                wf.add_item(notebooks_q[n]["notebook"], str(notebooks_q[n]["count"]) + " item(s)", autocomplete = n, icon = icon)
+                if n in notebooks_q:
+                    wf.add_item(notebooks_q[n]["notebook"], str(notebooks_q[n]["count"]) + " item(s)", autocomplete=n, icon=icon)
 
         if len(args) > 0:
             # Perform Search!
@@ -117,16 +118,12 @@ def main(wf):
                                     with_score=True,
                                     score_alias='search_score').order_by(NoteIndex.rank())
             if len(results) == 0:
-                wf.add_item("No Results", icon = ICON_ERROR)
+                wf.add_item("No Results", icon=ICON_ERROR)
             else:
                 for result in results:
-                    r = Note.get(uuid = result.uuid)
-                    wf.add_item(r.title, str(result.search_score) + "-" + unicode(result.content),  arg = r.uuid, valid = True, icon = "icons/note.png")
+                    r = Note.get(uuid=result.uuid)
+                    wf.add_item(r.title, str(result.search_score) + "-" + unicode(result.content),  arg=r.uuid, valid=True, icon="icons/note.png")
 
-
-    # Send output to Alfred. You can only call this once.
-    # Well, you *can* call it multiple times, but Alfred won't be listening
-    # any more...
     wf.send_feedback()
 
     # Regenerate database if it is old.
