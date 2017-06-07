@@ -138,7 +138,7 @@ def main(wf):
 
 if __name__ == '__main__':
     # Create a global `Workflow` object
-    wf = Workflow(update_settings={'github_slug': 'danielecook/Quiver-alfred', 'version': '0.3'})
+    wf = Workflow(update_settings={'github_slug': 'danielecook/Quiver-alfred', 'version': '0.4'})
     if wf.update_available:
         # Download new version and tell Alfred to install it
         wf.start_update()
