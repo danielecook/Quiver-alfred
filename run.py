@@ -107,8 +107,9 @@ def main(wf):
             if n == "Recents":
                 wf.add_item("Recents", autocomplete="Recents", icon=icon)
             else:
-                if n in notebooks_q:
-                    wf.add_item(notebooks_q[n]["notebook"], str(notebooks_q[n]["count"]) + " item(s)", autocomplete=n, icon=icon)
+                # Default retrieval `notebook = n' with `count = 0' to prevent keyerror on empty Index / Trash
+                notebook = notebooks_q.get(n, {"notebook": n, "count": 0})
+                wf.add_item(notebook["notebook"], str(notebook["count"]) + " item(s)", autocomplete = n, icon = icon)
 
         if len(args) > 0:
             # Perform Search!
@@ -123,6 +124,7 @@ def main(wf):
                 for result in results:
                     r = Note.get(uuid=result.uuid)
                     wf.add_item(r.title, str(result.search_score) + "-" + unicode(result.content),  arg=r.uuid, valid=True, icon="icons/note.png")
+
 
     wf.send_feedback()
 
