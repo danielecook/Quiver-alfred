@@ -30,6 +30,9 @@ def search_notes(phrase):
             .where(NoteIndex.match(phrase))
             .order_by(NoteIndex.bm25()))
 
+def tag_filter_key(tag):
+    return "#" + tag["tag"]
+
 
 def main(wf):
     args = wf.args[0]
@@ -75,18 +78,16 @@ def main(wf):
     taglist = [x["tag"] for x in tagset]
     ttaglist = ["#" + x for x in taglist]
     targ = "#" + args
-    # Searching by tag
-    if args in ttaglist:
-        notes = Note.select(Tags, Note).filter(args.strip("#") == Tags.tag).join(Tags).distinct().execute()
-        display_notes(notes)
-    elif args.startswith(u"#"):
-        tag_filter = []
-        for tag in tagset:
-            ttag = "#" + tag["tag"]
-            tag_filter.append(ttag)
-        tag_filter = wf.filter(args, tag_filter)
-        for ttag in tag_filter:
-            wf.add_item(ttag, str(tag["count"]) + " item(s)",  autocomplete=ttag, icon="icons/tag.png")
+    # Searching by Tag
+    if args.startswith(u"#"):
+        if args in ttaglist:
+            notes = Note.select(Tags, Note).filter(args.strip("#") == Tags.tag).join(Tags).distinct().execute()
+            display_notes(notes)
+        else:
+            tag_filter = wf.filter(args, tagset, tag_filter_key)
+            for tag in tag_filter:
+                tag_name = tag_filter_key(tag)
+                wf.add_item(tag_name, str(tag["count"]) + " item(s)",  autocomplete=tag_name, icon="icons/tag.png")
 
     # Searching by Notebook
     elif args in notebooks_list:
