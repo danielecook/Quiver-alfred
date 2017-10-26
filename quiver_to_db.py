@@ -68,7 +68,7 @@ def load_json(f):
 
 # Store notes
 with db.atomic():
-    for notebook in iglob(libpath + "/*"):
+    for notebook in iglob(libpath + "/*.qvnotebook"):
         meta = load_json(list(iglob(notebook + "/meta.json"))[0])
         nb_name = meta["name"]
 
