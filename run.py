@@ -6,12 +6,15 @@ import sys
 from workflow import Workflow, ICON_ERROR, ICON_INFO, ICON_SYNC
 from workflow.background import run_in_background, is_running
 try:
-    from quiver_to_db import Note, NoteIndex, Tags, db
+    from quiver_to_db import Note, NoteIndex, Tags
 except:
     pass
-from peewee import fn
+from peewee import *
 import os
 from subprocess import call
+from playhouse.sqlite_ext import SqliteExtDatabase
+
+db = SqliteExtDatabase("quiver.db")
 
 
 def display_notes(notes):
